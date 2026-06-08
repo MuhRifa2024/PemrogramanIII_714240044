@@ -94,7 +94,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	token, err := middleware.GenerateJWT(user, 2*time.Hour)
+	token, err := middleware.GenerateJWT(user, 30*time.Minute)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(model.Response{
 			Message: "gagal membuat token",
