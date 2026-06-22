@@ -2,8 +2,10 @@ package main
 
 import (
 	"be_latihan/config"
+	"be_latihan/docs"
 	"be_latihan/model"
 	"be_latihan/router"
+	"os"
 	"strings"
 
 	_ "be_latihan/docs"
@@ -28,12 +30,19 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-	AllowOrigins: strings.Join(config.GetAllowedOrigins(), ","),
-	AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
-	AllowHeaders: "Origin,Content-Type,Accept,Authorization",
-}))
+		AllowOrigins: strings.Join(config.GetAllowedOrigins(), ","),
+		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders: "Origin,Content-Type,Accept,Authorization",
+	}))
 
 	app.Use(logger.New())
+
+	//Swagger host configuration
+	swaggerHost := os.Getenv("SWAGGER_HOST")
+	if swaggerHost == "" {
+		swaggerHost = "127.0.0.1:3000"
+	}
+	docs.SwaggerInfo.Host = swaggerHost
 
 	config.InitDB()
 	// AutoMigrate membuat tabel berdasarkan Struct secara otomatis
